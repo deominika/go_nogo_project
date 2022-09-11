@@ -16,9 +16,8 @@ from itertools import combinations_with_replacement, product
 #GLOBALS
 clock=core.Clock()
 RESULTS = list()  # lista, w której b?d? zapisywane wyniki
-RESULTS.append(['PART_ID', 'Group', 'Trial_no', 'Stim_type', 'Reaction_time', 'Correctness',"Experiment", 'Sex', 'Age' ]) #dodaje nazwy kolumn, bez danych
-
-
+RESULTS.append(['PART_ID', 'Group', 'Trial_no', 'Stim_type', 'Reaction_time', 'Correctness',"Experiment", 'Sex', 'Age' ])
+#dodaje nazwy kolumn, bez danych
 
 @atexit.register
 def save_beh_results(): #funkcja zapisujaca wyniki ka?dego badanego w pliku csv
@@ -109,7 +108,7 @@ def abort_with_error(err):#nieostotne
     raise Exception(err)
 
 
-def dialog_pulp():
+def dialog_pulp(): #wyswietla okno dialogowe, zbiera inf o identyfikatorze, plci, wieku
     info={'IDENTYFIKATOR': '', u'P\u0141E\u0106': ['M', "K"], 'WIEK': '20'} #to 20 jest domyslne ale mozna zmieniac
     dictDlg=gui.DlgFromDict(
         dictionary=info, title='Go/No Go Test')
@@ -119,19 +118,22 @@ def dialog_pulp():
 
 
 def main():
-    global PART_ID, Group, Sex, Age #
+    global PART_ID, Group, Sex, Age #zmienne globalne
     info = dialog_pulp()
     conf=yaml.safe_load(open('config.yaml', encoding='utf-8'))
     win=visual.Window(list(SCREEN_RES.values()), fullscr=False, monitor='testMonitor', units='pix', screen=0, color=conf['BACKGROUND_COLOR'])
     event.Mouse(visible=False, newPos=None, win=win)
     FRAME_RATE=get_frame_rate(win)
+    #okno nie jest na calym ekranie, nie widac myszki
 
-    if FRAME_RATE != conf['FRAME_RATE']: #niewa?ne
+    if FRAME_RATE != conf['FRAME_RATE']: #niewazne
         dlg=gui.Dlg(title="Critical error")
         dlg.addText(
             'Wrong no of frames detected: {}. Experiment terminated.'.format(FRAME_RATE))
         dlg.show()
         return None
+
+
 
     PART_ID=info['IDENTYFIKATOR']
     Sex = info[u'P\u0141E\u0106']
@@ -139,45 +141,48 @@ def main():
     logging.LogFile("".join(['results/', PART_ID, '_', Sex, '_', Age + '.log']), level=logging.INFO)  # errors logging
     logging.info('FRAME RATE: {}'.format(FRAME_RATE))
     logging.info('SCREEN RES: {}'.format(SCREEN_RES.values()))
+    # ten fragment zbiera inf z okna dialogowego do wynikow
 
-    show_info(win, join('.', 'messages', 'hello.txt'))
+#poczatek procedury
+    show_info(win, join('.', 'messages', 'hello.txt')) #piewrsza wiadomosc dla badanego
     Trial_no = 0
-    Trial_no += 1
+    Trial_no += 1 #liczenie numerow triali
+    show_info(win, join('.', 'messages', 'before_training.txt'))  #druga wiadomosc
 
-    show_info(win, join('.', 'messages', 'before_training.txt'))
+    Group = random.choice(["neutral", "negative"])
+    if Group == "negative":
+        show_movie(win, 'negative_priming.mp4')
+    else:
+        show_movie(win, 'neutral.mp4')
+    # wywolaj funkcje pokazywania filmiku w zalezno?ci od wylosowanej grupy
 
-    show_movie(win, 'neutral.mp4')
-    # wywolaj funkcje pokazywania filmiku
+    show_info(win, join('.', 'messages', 'beforebefore_experiment.txt')) #trzecia wiadomosc - po prymowaniu
+    part_of_experiment(win, conf, 'training') #wywolywanie treningu
+    show_info(win, join('.', 'messages', 'before_experiment.txt')) #inf przed czescia eksperymentalna
+    part_of_experiment(win, conf, 'experiment') #wywolywanie czesci eksperymentalnej
 
-    show_info(win, join('.', 'messages', 'beforebefore_experiment.txt'))
-    part_of_experiment(win, conf, 'training')
-    show_info(win, join('.', 'messages', 'before_experiment.txt'))
-    part_of_experiment(win, conf, 'experiment')
-
-
-        # === Cleaning time ===
-    #save_beh_results() i teraz zapisuje tylko raz wyniki yay
+    #zapisuje tylko raz wyniki
     logging.flush()
-    show_info(win, join('.', 'messages', 'end.txt'))
-    win.close()
+    show_info(win, join('.', 'messages', 'end.txt')) #podziekowania
+    win.close() #koniec procedury
 
 def trial(win, stim, conf):
     for frameN in range(conf['FRAMES_BETWEEN_STIMS']):
-        win.flip()
+        win.flip() #wyswietlanie pustego ekranu przez tyle ile ma by? klatek
     win.callOnFlip(clock.reset)
     event.clearEvents()
     Reaction_time = "NA"
     for frameN in range(conf['STIM_DURATION_IN_FRAMES']):
         stim.draw()
-        win.flip()
+        win.flip() #wyswietlanie bodxca
         response = event.getKeys()
         if response == conf["REACTION_KEYS"]:
             Reaction_time = clock.getTime()
             break
-    return Reaction_time, response
+    return Reaction_time, response  #zbieranie czasu reakcji
 
 
-def if_correct(response, go_no_go, conf):
+def if_correct(response, go_no_go, conf): #zbieranie inf o poprawosci reakcji
     if go_no_go == 'Go' and response == conf['REACTION_KEYS']:
         return True
     elif go_no_go == 'Go2' and response == conf['REACTION_KEYS']:
@@ -190,8 +195,9 @@ def part_of_experiment(win, conf, experiment):
     go_stim = visual.ImageStim(win=win, image='./images/GO_stim.png',interpolate=True, size =(conf['STIM_SIZE'],conf['STIM_SIZE']))
     go2_stim = visual.ImageStim(win=win, image='./images/GO2_stim.png',interpolate=True, size =(conf['STIM_SIZE'],conf['STIM_SIZE']))
     nogo_stim = visual.ImageStim(win=win, image='./images/NOGO_stim.png',interpolate=True, size =(conf['STIM_SIZE'],conf['STIM_SIZE']))
+#przygotowanie obrazkow do wyswietlenia jako bodzce w trialu
 
-    allstimlist = []
+    allstimlist = [] #lista ze wszystkimi bodzcami do wyswietlenia
     if experiment == "training":
         for x in range(conf['NO_GO_TRIALS_TRAINING']):
             allstimlist.append("Go")
@@ -207,21 +213,20 @@ def part_of_experiment(win, conf, experiment):
         for x in range(conf['NO_NO_GO_TRIALS_EXPERIMENT']):
             allstimlist.append("NoGo")
 
-
     Stim_type = "NA"
     for Trial_no in range(len(allstimlist)):
 
         previousstim = Stim_type
         Stim_type = random.choice(allstimlist)
         if previousstim == "NA":
-            Stim_type = "Go"
+            Stim_type = "Go" #pierwszy bodziec jest zawsze bodzcem Go
         while Stim_type == previousstim and Stim_type != "Go" and allstimlist.count(Stim_type) != len(allstimlist):
             Stim_type = random.choice(allstimlist)
-        #stim_type to rand czyli zmienna zapisuj?ca co si? sta?o po random.choice, wynik losowania z listy
+            # Go2 i NoGo nie moga wysiwetlic sie obok siebie - gdy tak sie zdarzy to losuje jeszcze raz
         if Stim_type == "Go":
             Reaction_time, response = trial(win, go_stim, conf)
-            Correctness = if_correct(response, Stim_type, conf)
-            allstimlist.remove("Go")
+            Correctness = if_correct(response, Stim_type, conf) #zbieranie czasu reakcji i poprawnosci
+            allstimlist.remove("Go") #usuwanie bodzca z listy bodzcow do wyswietlenia
         elif Stim_type == "NoGo":
             Reaction_time, response = trial(win, nogo_stim, conf)
             Correctness = if_correct(response, Stim_type, conf)
@@ -232,7 +237,7 @@ def part_of_experiment(win, conf, experiment):
             allstimlist.remove("Go2")
 
         RESULTS.append([PART_ID, Group, Trial_no, Stim_type, Reaction_time, Correctness,experiment, Sex, Age ])
-
+        #zbieranie wszytskich wynikow do odpowiednich kolumn w tabeli
 
 if __name__ == '__main__':
     PART_ID=''
