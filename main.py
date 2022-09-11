@@ -8,47 +8,73 @@ from os.path import join
 from statistics import mean
 
 import yaml
-from psychopy import visual, event, logging, gui, core
+from psychopy import visual, event, logging, gui, core, constants
 
 from misc.screen_misc import get_screen_res, get_frame_rate
 from itertools import combinations_with_replacement, product
 
+#GLOBALS
+clock=core.Clock()
+RESULTS = list()  # lista, w której b?d? zapisywane wyniki
+RESULTS.append(['PART_ID', 'Group', 'Trial_no', 'Stim_type', 'Reaction_time', 'Correctness',"Experiment", 'Sex', 'Age' ]) #dodaje nazwy kolumn, bez danych
+
+
 
 @atexit.register
-def save_beh_results():
-    """
-    Save results of experiment. Decorated with @atexit in order to make sure, that intermediate
-    results will be saved even if interpreter will broke.
-    """
-    with open(join('results', PART_ID + '_' + str(random.choice(range(100, 1000))) + '_beh.csv'), 'w', encoding='utf-8') as beh_file:
+def save_beh_results(): #funkcja zapisujaca wyniki ka?dego badanego w pliku csv
+    with open(join('results', PART_ID + '_beh.csv'), 'w', encoding='utf-8') as beh_file:
         beh_writer = csv.writer(beh_file)
         beh_writer.writerows(RESULTS)
     logging.flush()
 
 
-def show_image(win, file_name, size, key='f7'):
-    """
-    Show instructions in a form of an image.
-    """
-    image = visual.ImageStim(win=win, image=file_name,
-                             interpolate=True, size=size)
+def show_image(win, file_name, size, key='f7'): #funkcja wyswietlajaca obrazki
+    image = visual.ImageStim(win=win, image=file_name, interpolate=True, size=size)
     image.draw()
     win.flip()
-    clicked = event.waitKeys(keyList=[key, 'return', 'space'])
-    if clicked == [key]:
-        logging.critical(
-            'Experiment finished by user! {} pressed.'.format(key[0]))
-        exit(0)
+    return
+
+
+def show_info(win, file_name, insert=''): #funkcja wyswietlajaca tekst; insert daje mozliwosc dopisania czegos
+    msg = read_text_from_file(file_name, insert=insert)
+    msg = visual.TextStim(win, color='black', text=msg, height=25, wrapWidth=SCREEN_RES['width'])
+    msg.draw()
+    win.flip()
+    key = event.waitKeys(keyList=['f7', 'space'])
+    if key == ['f7']:
+        abort_with_error(
+            'Experiment finished by user on info screen! F7 pressed.')
     win.flip()
 
 
-def read_text_from_file(file_name, insert=''):
+
+
+def show_movie(win, file_name): #funkcja wyswietlajaca filmiki do prymowania
+    file_name = './videos/' + file_name
+    movie = visual.MovieStim2(win, filename=file_name, size = 1440)
+    movie.loadMovie(file_name)
+    movie.play()
+    clock.reset()
+    while clock.getTime() <= float(movie.duration):
+        clicked = event.getKeys(keyList=['f7', 'space'])
+        movie.draw()
+        if clicked == ['f7']:
+            logging.critical(
+                'Experiment finished by user! {} pressed.'.format(key[0]))
+            exit(0)
+        if clicked == ['space']:
+            break
+        win.flip()
+    movie.stop()
+    return
+
+
+
+
+def read_text_from_file(file_name, insert=''): #nieostotne, potrzebne do show_info
     """
     Method that read message from text file, and optionally add some
     dynamically generated info.
-    :param file_name: Name of file to read
-    :param insert:
-    :return: message
     """
     if not isinstance(file_name, str):
         logging.error('Problem with file reading, filename must be a string')
@@ -65,7 +91,7 @@ def read_text_from_file(file_name, insert=''):
     return ''.join(msg)
 
 
-def check_exit(key='f7'):
+def check_exit(key='f7'): #nieistotne
     """
     Check (during procedure) if experimentator doesn't want to terminate.
     """
@@ -75,25 +101,7 @@ def check_exit(key='f7'):
             'Experiment finished by user! {} pressed.'.format(key))
 
 
-def show_info(win, file_name, insert=''):
-    """
-    Clear way to show info message into screen.
-    :param win:
-    :return:
-    """
-    msg = read_text_from_file(file_name, insert=insert)
-    msg = visual.TextStim(win, color='black', text=msg,
-                          height=20, wrapWidth=SCREEN_RES['width'])
-    msg.draw()
-    win.flip()
-    key = event.waitKeys(keyList=['f7', 'return', 'space', 'left', 'right'])
-    if key == ['f7']:
-        abort_with_error(
-            'Experiment finished by user on info screen! F7 pressed.')
-    win.flip()
-
-
-def abort_with_error(err):
+def abort_with_error(err):#nieostotne
     """
     Call if an error occured.
     """
@@ -101,151 +109,130 @@ def abort_with_error(err):
     raise Exception(err)
 
 
-# GLOBALS
-
-RESULTS = list()  # list in which data will be colected
-RESULTS.append(['PART_ID', 'Trial_no', 'Reaction time', 'Correctness', '...']  # ... Results header
-
-def main():
-    global PART_ID  # PART_ID is used in case of error on @atexit, that's why it must be global
-
-    # === Dialog popup ===
-    info={'IDENTYFIKATOR': '', u'P\u0141EC': ['M', "K"], 'WIEK': '20'}
+def dialog_pulp():
+    info={'IDENTYFIKATOR': '', u'P\u0141E\u0106': ['M', "K"], 'WIEK': '20'} #to 20 jest domyslne ale mozna zmieniac
     dictDlg=gui.DlgFromDict(
-        dictionary=info, title='Experiment title, fill by your name!')
+        dictionary=info, title='Go/No Go Test')
     if not dictDlg.OK:
         abort_with_error('Info dialog terminated.')
+    return info
 
-    clock=core.Clock()
-    # load config, all params are there
-    conf=yaml.load(open('config.yaml', encoding='utf-8'))
 
-    # === Scene init ===
-    win=visual.Window(list(SCREEN_RES.values()), fullscr=False, monitor='testMonitor', units='pix',
-                                       screen=0, color=conf['BACKGROUND_COLOR'])
-    event.Mouse(visible=False, newPos=None, win=win)  # Make mouse invisible
+def main():
+    global PART_ID, Group, Sex, Age #
+    info = dialog_pulp()
+    conf=yaml.safe_load(open('config.yaml', encoding='utf-8'))
+    win=visual.Window(list(SCREEN_RES.values()), fullscr=False, monitor='testMonitor', units='pix', screen=0, color=conf['BACKGROUND_COLOR'])
+    event.Mouse(visible=False, newPos=None, win=win)
     FRAME_RATE=get_frame_rate(win)
 
-    # check if a detected frame rate is consistent with a frame rate for witch experiment was designed
-    # important only if milisecond precision design is used
-    if FRAME_RATE != conf['FRAME_RATE']:
+    if FRAME_RATE != conf['FRAME_RATE']: #niewa?ne
         dlg=gui.Dlg(title="Critical error")
         dlg.addText(
             'Wrong no of frames detected: {}. Experiment terminated.'.format(FRAME_RATE))
         dlg.show()
         return None
 
-    PART_ID=info['IDENTYFIKATOR'] + info[u'P\u0141EC'] + info['WIEK']
-    logging.LogFile(join('results', PART_ID + '.log'),
-                    level=logging.INFO)  # errors logging
+    PART_ID=info['IDENTYFIKATOR']
+    Sex = info[u'P\u0141E\u0106']
+    Age = info['WIEK']
+    logging.LogFile("".join(['results/', PART_ID, '_', Sex, '_', Age + '.log']), level=logging.INFO)  # errors logging
     logging.info('FRAME RATE: {}'.format(FRAME_RATE))
     logging.info('SCREEN RES: {}'.format(SCREEN_RES.values()))
 
-    # === Prepare stimulus here ===
-    #
-    # Examples:
-    # fix_cross = visual.TextStim(win, text='+', height=100, color=conf['FIX_CROSS_COLOR'])
-    # que = visual.Circle(win, radius=conf['QUE_RADIUS'], fillColor=conf['QUE_COLOR'], lineColor=conf['QUE_COLOR'])
-    # stim = visual.TextStim(win, text='', height=conf['STIM_SIZE'], color=conf['STIM_COLOR'])
-    # mask = visual.ImageStim(win, image='mask4.png', size=(conf['STIM_SIZE'], conf['STIM_SIZE']))
-
-    # === Training ===
-
     show_info(win, join('.', 'messages', 'hello.txt'))
-
-    trial_no += 1
+    Trial_no = 0
+    Trial_no += 1
 
     show_info(win, join('.', 'messages', 'before_training.txt'))
-    csi_list=[conf['TRAINING_CSI']] * conf['NO_TRAINING_TRIALS'][1]
-    for csi in csi_list:
-        key_pressed, rt, ...=run_trial(win, conf, ...)
-        corr=...
-        RESULTS.append([PART_ID, trial_no, 'training', ...])
 
-        # it's often good presenting feedback in trening trials
-        feedb="Poprawnie" if corr else "Niepoprawnie"
-        feedb=visual.TextStim(win, text=feedb, height=50,
-                              color=conf['FIX_CROSS_COLOR'])
-        feedb.draw()
-        win.flip()
-        core.wait(1)
-        win.flip()
+    show_movie(win, 'neutral.mp4')
+    # wywolaj funkcje pokazywania filmiku
 
-        trial_no += 1
-        # === Experiment ===
-
+    show_info(win, join('.', 'messages', 'beforebefore_experiment.txt'))
+    part_of_experiment(win, conf, 'training')
     show_info(win, join('.', 'messages', 'before_experiment.txt'))
+    part_of_experiment(win, conf, 'experiment')
 
-    for block_no in range(conf['NO_BLOCKS']):
-        for _ in range(conf['Trials in block'])
-            key_pressed, rt, ...=run_trial(win, conf, ...)
-            RESULTS.append([PART_ID, block_no, trial_no, 'experiment', ...])
-            trial_no += 1
-
-        show_image(win, os.path.join('.', 'images', 'break.jpg'),
-                   size=(SCREEN_RES['width'], SCREEN_RES['height']))
 
         # === Cleaning time ===
-    save_beh_results()
+    #save_beh_results() i teraz zapisuje tylko raz wyniki yay
     logging.flush()
     show_info(win, join('.', 'messages', 'end.txt'))
     win.close()
 
-
-def run_trial(win, ...):
-    """
-    Prepare and present single trial of procedure.
-    Input (params) should consist all data need for presenting stimuli.
-    If some stimulus (eg. text, label, button) will be presented across many trials.
-    Should be prepared outside this function and passed for .draw() or .setAutoDraw().
-
-    All behavioral data (reaction time, answer, etc. should be returned from this function)
-    """
-
-    # === Prepare trial-related stimulus ===
-    # Randomise if needed
-    #
-    # Examples:
-    #
-    # que_pos = random.choice([-conf['STIM_SHIFT'], conf['STIM_SHIFT']])
-    # stim.text = random.choice(conf['STIM_LETTERS'])
-    #
-
-    # === Start pre-trial  stuff (Fixation cross etc.)===
-
-    # for _ in range(conf['FIX_CROSS_TIME']):
-    #    fix_cross.draw()
-    #    win.flip()
-
-    # === Start trial ===
-    # This part is time-crucial. All stims must be already prepared.
-    # Only .draw() .flip() and reaction related stuff goes there.
-    event.clearEvents()
-    # make sure, that clock will be reset exactly when stimuli will be drawn
+def trial(win, stim, conf):
+    for frameN in range(conf['FRAMES_BETWEEN_STIMS']):
+        win.flip()
     win.callOnFlip(clock.reset)
-
-    for _ in range(conf['STIM_TIME']):  # present stimuli
-        reaction=event.getKeys(keyList=list(
-            conf['REACTION_KEYS']), timeStamped=clock)
-        if reaction:  # break if any button was pressed
-            break
+    event.clearEvents()
+    Reaction_time = "NA"
+    for frameN in range(conf['STIM_DURATION_IN_FRAMES']):
         stim.draw()
         win.flip()
+        response = event.getKeys()
+        if response == conf["REACTION_KEYS"]:
+            Reaction_time = clock.getTime()
+            break
+    return Reaction_time, response
 
-    if not reaction:  # no reaction during stim time, allow to answer after that
-        question_frame.draw()
-        question_label.draw()
-        win.flip()
-        reaction=event.waitKeys(keyList=list(
-            conf['REACTION_KEYS']), maxWait=conf['REACTION_TIME'], timeStamped=clock)
-    # === Trial ended, prepare data for send  ===
-    if reaction:
-        key_pressed, rt=reaction[0]
-    else:  # timeout
-        key_pressed='no_key'
-        rt=-1.0
 
-    return key_pressed, rt  # return all data collected during trial
+def if_correct(response, go_no_go, conf):
+    if go_no_go == 'Go' and response == conf['REACTION_KEYS']:
+        return True
+    elif go_no_go == 'Go2' and response == conf['REACTION_KEYS']:
+        return True
+    return False
+
+
+def part_of_experiment(win, conf, experiment):
+
+    go_stim = visual.ImageStim(win=win, image='./images/GO_stim.png',interpolate=True, size =(conf['STIM_SIZE'],conf['STIM_SIZE']))
+    go2_stim = visual.ImageStim(win=win, image='./images/GO2_stim.png',interpolate=True, size =(conf['STIM_SIZE'],conf['STIM_SIZE']))
+    nogo_stim = visual.ImageStim(win=win, image='./images/NOGO_stim.png',interpolate=True, size =(conf['STIM_SIZE'],conf['STIM_SIZE']))
+
+    allstimlist = []
+    if experiment == "training":
+        for x in range(conf['NO_GO_TRIALS_TRAINING']):
+            allstimlist.append("Go")
+        for x in range(conf['NO_GO2_TRIALS_TRAINING']):
+                allstimlist.append("Go2")
+        for x in range(conf['NO_NO_GO_TRIALS_TRAINING']):
+            allstimlist.append("NoGo")
+    elif experiment == "experiment":
+        for x in range(conf['NO_GO_TRIALS_EXPERIMENT']):
+            allstimlist.append("Go")
+        for x in range(conf['NO_GO2_TRIALS_EXPERIMENT']):
+                allstimlist.append("Go2")
+        for x in range(conf['NO_NO_GO_TRIALS_EXPERIMENT']):
+            allstimlist.append("NoGo")
+
+
+    Stim_type = "NA"
+    for Trial_no in range(len(allstimlist)):
+
+        previousstim = Stim_type
+        Stim_type = random.choice(allstimlist)
+        if previousstim == "NA":
+            Stim_type = "Go"
+        while Stim_type == previousstim and Stim_type != "Go" and allstimlist.count(Stim_type) != len(allstimlist):
+            Stim_type = random.choice(allstimlist)
+        #stim_type to rand czyli zmienna zapisuj?ca co si? sta?o po random.choice, wynik losowania z listy
+        if Stim_type == "Go":
+            Reaction_time, response = trial(win, go_stim, conf)
+            Correctness = if_correct(response, Stim_type, conf)
+            allstimlist.remove("Go")
+        elif Stim_type == "NoGo":
+            Reaction_time, response = trial(win, nogo_stim, conf)
+            Correctness = if_correct(response, Stim_type, conf)
+            allstimlist.remove("NoGo")
+        elif Stim_type == "Go2":
+            Reaction_time, response = trial(win, go2_stim, conf)
+            Correctness = if_correct(response, Stim_type, conf)
+            allstimlist.remove("Go2")
+
+        RESULTS.append([PART_ID, Group, Trial_no, Stim_type, Reaction_time, Correctness,experiment, Sex, Age ])
+
 
 if __name__ == '__main__':
     PART_ID=''

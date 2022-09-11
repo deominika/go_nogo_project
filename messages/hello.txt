@@ -1,6 +1,11 @@
-Dokładny opis zadania stawianego osobie badanej, najlepiej z przykładem.
-Informacja, że ekseryment zostanie poprzedzony sesją treningową. 
-Zachęta do zadawania pytań w razie niezrozumienia problemu.
 
-Najpierw czeka Cię trening zadania. 
-Przyciśnij SPACJĘ by rozpocząć.
+Witaj! Dziękujemy, że zgodziłeś się wziąć udział w badaniu.
+Twoim zadaniem będzie zagranie w prostą grę. Jej celem jest uzbieranie ziół
+koniecznych do przyrządzeniaeliksiru oraz omijanie tych, które są trujące.
+Na ekranie wyświetlane będą obrazki przedstawiające trzy rodzaje ziół: zielone, niebieskie i czerwone.
+Twoim zadaniem jest zbieranie ziół zielonych i niebieskich oraz pomijanie czerwonych.
+Aby zebrać zioło musisz nacisnąć spację, gdy pojawi się ono na ekranie.
+Jeżeli wyświetlane zioło będzie trujące (czerwone) nie naciskaj niczego.
+
+Na początku przejdziesz krótki trening. Jeżeli masz pytania, zadaj je eksperymentatorowi.
+Jeżeli nie, naciśnij spację, aby rozpocząć.

@@ -1,4 +1,6 @@
-Teraz zaczyna się zadanie właściwe, zachęta do pełnej koncentracji, jeśli trzeba, przypomnienie zadania
-lub jak reagować (myszką, strzałkami etc. )
+Teraz zaczyna się zadanie właściwe.
+Pamiętaj, Twoim zadaniem jest zbieranie zielonych i niebieskich ziół oraz ignorowanie czerwonych.
+Aby zebrać zioło naciśnij spację, gdy pojawi się ono na ekranie.
+Kiedy pojawi się zioło do zignorowania nie naciskaj żadnego przycisku.
 
-Przyciśnij SPACJĘ by zacząć.
+Jeżeli masz jakieś pytania, zadaj je teraz eksperymentatorowi. Jeżeli nie, naciśnij spację, aby rozpocząć.

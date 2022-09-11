@@ -1,4 +1,5 @@
-Przypominamy krótko polecenie do zadania. 
 
-Przyciśnij SPACJĘ by rozpocząć.
+Za chwile rozpocznie się gra.
+Jednak przed jej rozpoczęciem obejrzysz krótki film.
 
+Aby go odtworzyć naciśnij spację.
