@@ -1,0 +1,57 @@
+13.4845 	INFO 	FRAME RATE: 60
+13.4846 	INFO 	SCREEN RES: odict_values([1280, 720])
+13.7096 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color=array([-1., -1., -1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=25.0, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='pix', win=Window(...), wrapWidth=1280)
+13.9829 	DATA 	Keypress: space
+14.0187 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color=array([-1., -1., -1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=25.0, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='pix', win=Window(...), wrapWidth=1280)
+14.4184 	DATA 	Keypress: space
+14.7051 	EXP 	Created unnamed MovieStim2 = MovieStim2(__class__=<class 'psychopy.visual.movie2.MovieStim2'>, anchor=('center', 'center'), autoLog=True, color=UNKNOWN, colorSpace=UNKNOWN, depth=0.0, filename='./videos/neutral.mp4', flipHoriz=False, flipVert=False, fps=UNKNOWN, interpolate=True, loop=False, name='unnamed MovieStim2', noAudio=UNKNOWN, opacity=1, ori=0.0, pos=array([0., 0.]), size=array([1440.,  810.]), units='pix', vframe_callback=UNKNOWN, volume=100, win=Window(...))
+14.7979 	WARNING 	MovieStim2 dropping video frame index: 1
+14.8906 	EXP 	unnamed MovieStim2: movie = './videos/neutral.mp4'
+14.8906 	EXP 	unnamed MovieStim2: autoLog = True
+14.8906 	EXP 	unnamed MovieStim2: movie = './videos/neutral.mp4'
+14.8906 	EXP 	Set unnamed MovieStim2 playing
+14.8909 	WARNING 	MovieStim2 dropping video frame index: 3
+14.8914 	WARNING 	MovieStim2 dropping video frame index: 4
+15.7589 	DATA 	Keypress: space
+15.8824 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color=array([-1., -1., -1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=25.0, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='pix', win=Window(...), wrapWidth=1280)
+15.8992 	EXP 	Set unnamed MovieStim2 stopped
+16.2783 	DATA 	Keypress: space
+16.5605 	EXP 	Created unnamed ImageStim = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, image='./images/GO_stim.png', interpolate=True, mask=None, maskParams=None, name='unnamed ImageStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([500., 500.]), texRes=128, units='pix', win=Window(...))
+16.8802 	EXP 	Created unnamed ImageStim = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, image='./images/GO2_stim.png', interpolate=True, mask=None, maskParams=None, name='unnamed ImageStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([500., 500.]), texRes=128, units='pix', win=Window(...))
+17.1994 	EXP 	Created unnamed ImageStim = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, image='./images/NOGO_stim.png', interpolate=True, mask=None, maskParams=None, name='unnamed ImageStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([500., 500.]), texRes=128, units='pix', win=Window(...))
+17.2002 	DATA 	Keypress: space
+18.4017 	DATA 	Keypress: space
+19.1670 	DATA 	Keypress: space
+19.9175 	DATA 	Keypress: space
+20.6834 	DATA 	Keypress: space
+21.4833 	DATA 	Keypress: space
+22.3667 	DATA 	Keypress: space
+25.8826 	DATA 	Keypress: space
+26.6994 	DATA 	Keypress: space
+27.5996 	DATA 	Keypress: space
+27.6294 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color=array([-1., -1., -1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=25.0, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='pix', win=Window(...), wrapWidth=1280)
+28.9860 	DATA 	Keypress: space
+29.2216 	EXP 	Created unnamed ImageStim = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, image='./images/GO_stim.png', interpolate=True, mask=None, maskParams=None, name='unnamed ImageStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([500., 500.]), texRes=128, units='pix', win=Window(...))
+29.5510 	EXP 	Created unnamed ImageStim = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, image='./images/GO2_stim.png', interpolate=True, mask=None, maskParams=None, name='unnamed ImageStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([500., 500.]), texRes=128, units='pix', win=Window(...))
+29.8641 	EXP 	Created unnamed ImageStim = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, image='./images/NOGO_stim.png', interpolate=True, mask=None, maskParams=None, name='unnamed ImageStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([500., 500.]), texRes=128, units='pix', win=Window(...))
+30.6492 	DATA 	Keypress: space
+31.3820 	DATA 	Keypress: space
+32.0836 	DATA 	Keypress: space
+32.7986 	DATA 	Keypress: space
+33.4992 	DATA 	Keypress: space
+34.1818 	DATA 	Keypress: space
+34.8483 	DATA 	Keypress: space
+35.8485 	DATA 	Keypress: space
+36.6484 	DATA 	Keypress: space
+39.8140 	DATA 	Keypress: space
+40.6142 	DATA 	Keypress: space
+41.4646 	DATA 	Keypress: space
+42.2804 	DATA 	Keypress: space
+43.2656 	DATA 	Keypress: space
+46.4637 	DATA 	Keypress: space
+47.2464 	DATA 	Keypress: space
+48.0796 	DATA 	Keypress: space
+48.8130 	DATA 	Keypress: space
+48.8473 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color=array([-1., -1., -1.]), colorSpace='rgb', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=25.0, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='pix', win=Window(...), wrapWidth=1280)
+49.6728 	DATA 	Keypress: space
+49.7702 	EXP 	window1: mouseVisible = True
