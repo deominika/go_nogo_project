@@ -199,19 +199,14 @@ def part_of_experiment(win, conf, experiment):
 
     allstimlist = [] #lista ze wszystkimi bodzcami do wyswietlenia
     if experiment == "training":
-        for x in range(conf['NO_GO_TRIALS_TRAINING']):
-            allstimlist.append("Go")
-        for x in range(conf['NO_GO2_TRIALS_TRAINING']):
-                allstimlist.append("Go2")
-        for x in range(conf['NO_NO_GO_TRIALS_TRAINING']):
-            allstimlist.append("NoGo")
+        allstimlist.extend(["Go"]*conf['NO_GO_TRIALS_TRAINING'])
+        allstimlist.extend(["Go2"]*conf['NO_GO2_TRIALS_TRAINING'])
+        allstimlist.extend(["NoGo"]*conf['NO_NO_GO_TRIALS_TRAINING'])
     elif experiment == "experiment":
-        for x in range(conf['NO_GO_TRIALS_EXPERIMENT']):
-            allstimlist.append("Go")
-        for x in range(conf['NO_GO2_TRIALS_EXPERIMENT']):
-                allstimlist.append("Go2")
-        for x in range(conf['NO_NO_GO_TRIALS_EXPERIMENT']):
-            allstimlist.append("NoGo")
+        allstimlist.extend(["Go"]*conf['NO_GO_TRIALS_EXPERIMENT'])
+        allstimlist.extend(["Go2"]*conf['NO_GO2_TRIALS_EXPERIMENT'])
+        allstimlist.extend(["NoGo"]*conf['NO_NO_GO_TRIALS_EXPERIMENT'])
+
 
     Stim_type = "NA"
     for Trial_no in range(len(allstimlist)):
@@ -223,18 +218,17 @@ def part_of_experiment(win, conf, experiment):
         while Stim_type == previousstim and Stim_type != "Go" and allstimlist.count(Stim_type) != len(allstimlist):
             Stim_type = random.choice(allstimlist)
             # Go2 i NoGo nie moga wysiwetlic sie obok siebie - gdy tak sie zdarzy to losuje jeszcze raz
-        if Stim_type == "Go":
-            Reaction_time, response = trial(win, go_stim, conf)
-            Correctness = if_correct(response, Stim_type, conf) #zbieranie czasu reakcji i poprawnosci
-            allstimlist.remove("Go") #usuwanie bodzca z listy bodzcow do wyswietlenia
-        elif Stim_type == "NoGo":
-            Reaction_time, response = trial(win, nogo_stim, conf)
-            Correctness = if_correct(response, Stim_type, conf)
-            allstimlist.remove("NoGo")
-        elif Stim_type == "Go2":
-            Reaction_time, response = trial(win, go2_stim, conf)
-            Correctness = if_correct(response, Stim_type, conf)
-            allstimlist.remove("Go2")
+
+        if Stim_type == "Go": #Stim_img jako zmienna przechowujaca jaki obrazek ma byc wyswietlany na jakie nazwy bodzcow
+            Stim_img = go_stim
+        if Stim_type == "Go2":
+            Stim_img = go2_stim
+        if Stim_type == "NoGo":
+            Stim_img = nogo_stim
+
+        Reaction_time, response = trial(win, Stim_img, conf)
+        Correctness = if_correct(response, Stim_type, conf)
+        allstimlist.remove(Stim_type)
 
         RESULTS.append([PART_ID, Group, Trial_no, Stim_type, Reaction_time, Correctness,experiment, Sex, Age ])
         #zbieranie wszytskich wynikow do odpowiednich kolumn w tabeli
